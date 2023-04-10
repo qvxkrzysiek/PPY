@@ -1,3 +1,13 @@
+import smtplib
+from email.mime.text import MIMEText
+def send_email(subject, body, sender, recipients, password):
+    msg = MIMEText(body)
+    msg['Subject'] = subjectmsg['From'] = sendermsg['To'] = ', '.join(recipients)
+    smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    smtp_server.login(sender, password)
+    smtp_server.sendmail(sender, recipients, msg.as_string())
+    smtp_server.quit()
+
 students_data = {}
 
 def grade_students():
@@ -60,7 +70,8 @@ while True:
     print("1. Dodaj studenta")
     print("2. Usuń studenta")
     print("3. Wyświetl studentów")
-    print("4. Wyjdź z programu")
+    print("4. Wyślij maile")
+    print("5. Wyjdź z programu")
     
     choice = input("Wybierz opcję (1/2/3/4): ")
     
@@ -103,6 +114,16 @@ while True:
             print(email, student['name'], student['surname'], student['points'], student['grade'], student['status'])
     
     elif choice == '4':
+        for email, student in students_data.items():
+            if student['status'] != 'MAILED':
+                send_email(student['email'],
+                        "To jest wiadomość wysłana za pomocą SMTP",
+                        "test@gmail.com",
+                        ["test2@gmail.com"],
+                        "haslo app gmaila")
+        print("Wysłano maile.")
+
+    elif choice == '5':
         break
     
     else:
